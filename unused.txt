@@ -1,0 +1,140 @@
+// import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+
+// /* ------------------ Types ------------------ */
+
+// export type ComponentRow = {
+//   id: string;
+//   name: string;
+//   type: string;
+//   parent?: string;
+//   modifiedBy: string;
+//   modifiedDate: string;
+//   selected: boolean;
+// };
+
+// export type RetrieveType = {
+//   name: string;
+//   members: string[];
+// };
+
+// type ComponentsState = {
+//   components: ComponentRow[];
+//   selectedComponents: ComponentRow[];
+// };
+
+// /* ------------------ Initial State ------------------ */
+
+// const initialState: ComponentsState = {
+//   components: [],
+//   selectedComponents: []
+// };
+
+// /* ------------------ Slice ------------------ */
+
+// const componentsSlice = createSlice({
+//   name: "components",
+//   initialState,
+//   reducers: {
+//     setComponents(state, action: PayloadAction<ComponentRow[]>) {
+//       state.components = action.payload;
+//     },
+
+//     toggleSelection(state, action: PayloadAction<string>) {
+//       const component = state.components.find((c) => c.id === action.payload);
+//       if (component) {
+//         component.selected = !component.selected;
+//       }
+//     },
+
+//     addComponent(state, action: PayloadAction<ComponentRow>) {
+//       const exists = state.components.some((c) => c.id === action.payload.id);
+//       if (!exists) {
+//         state.components.push(action.payload);
+//       }
+//     },
+
+//     removeComponent(state, action: PayloadAction<string>) {
+//       state.components = state.components.filter(
+//         (c) => c.id !== action.payload
+//       );
+//     },
+
+//     clearSelection(state) {
+//       state.components.forEach((c) => {
+//         c.selected = false;
+//       });
+//     }
+//   }
+// });
+
+// /* ------------------ Actions ------------------ */
+
+// export const {
+//   setComponents,
+//   toggleSelection,
+//   addComponent,
+//   removeComponent,
+//   clearSelection
+// } = componentsSlice.actions;
+
+// /* ------------------ Base Selector ------------------ */
+
+// // const selectComponentsState = (state: RootState) => state.components.components;
+
+// /* ------------------ Embedded Derived Selector ------------------ */
+
+// // export const selectRetrievePayload = createSelector(
+// //   [selectComponentsState],
+// //   (components): RetrieveType[] => {
+// //     const grouped = new Map<string, string[]>();
+
+// //     for (const c of components) {
+// //       if (!c.selected) continue;
+
+// //       if (!grouped.has(c.type)) {
+// //         grouped.set(c.type, []);
+// //       }
+
+// //       grouped.get(c.type)!.push(c.name);
+// //     }
+
+// //     return Array.from(grouped.entries()).map(([name, members]) => ({
+// //       name,
+// //       members
+// //     }));
+// //   }
+// // );
+
+// /* ------------------ Reducer ------------------ */
+
+// export default componentsSlice.reducer;
+
+// slices/componentsSlice.ts
+
+const Status = ({
+  label,
+  value
+}: {
+  label: string;
+  value: "idle" | "success" | "error" | "running";
+}) => {
+  const color =
+    value === "success"
+      ? "text-blue-600"
+      : value === "error"
+      ? "text-gray-900"
+      : value === "running"
+      ? "text-gray-700"
+      : "text-gray-500";
+
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
+      <span className={`text-xs font-medium ${color}`}>
+        {value.toUpperCase()}
+      </span>
+    </div>
+  );
+};

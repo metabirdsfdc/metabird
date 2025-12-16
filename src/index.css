@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+.form-input {
+  @apply w-full
+    px-3 py-2
+    text-sm
+    bg-white dark:bg-black
+    text-gray-900 dark:text-gray-100
+    border border-gray-300 dark:border-gray-700
+    rounded-md
+    placeholder-gray-400
+    focus:outline-none
+    focus:border-blue-600
+    focus:ring-1 focus:ring-blue-600/30
+    transition-colors;
+}
+
+:root {
+  --dark-bg: #0b0f14;
+  --dark-panel: #0f172a;
+  --dark-border: #1f2937;
+  --dark-input: #020617;
+  --dark-text: #e5e7eb;
+  --dark-muted: #94a3b8;
+}

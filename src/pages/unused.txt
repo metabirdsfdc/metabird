@@ -1,0 +1,472 @@
+{
+  /* {[
+            {
+              title: "Organization Mapping",
+              content: (
+                <div className="space-y-3">
+                  <Info label="Source Organization" value="RJ05 Dev Org" />
+                  <div className="text-center text-xs text-gray-400">→</div>
+                  <Info label="Target Organization" value="Production Org" />
+                </div>
+              )
+            },
+            {
+              title: "Package Upload",
+              content: (
+                <>
+                  <input
+                    type="file"
+                    onChange={handleFile}
+                    className="text-xs text-gray-700 dark:text-gray-300"
+                  />
+                  {file && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Selected: {file.name}
+                    </p>
+                  )}
+                </>
+              )
+            },
+            {
+              title: "Retrieve Metadata",
+              content: (
+                <ActionButton
+                  loading={retrieveLoading}
+                  onClick={retrieveMetadata}
+                  icon={<FileSearch size={14} />}
+                >
+                  Retrieve
+                </ActionButton>
+              )
+            },
+            {
+              title: "Deployment Actions",
+              content: (
+                <div className="flex flex-col gap-2">
+                  <ActionButton
+                    loading={deployLoading}
+                    disabled={!base64}
+                    onClick={deployMetadata}
+                    icon={<PlayCircle size={14} />}
+                  >
+                    Deploy
+                  </ActionButton>
+
+                  <button
+                    onClick={validateMetadata}
+                    disabled={!base64 || validateLoading}
+                    className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs
+                      border border-gray-300 dark:border-gray-700
+                      text-gray-700 dark:text-gray-300
+                      rounded-md
+                      hover:bg-gray-100 dark:hover:bg-gray-900
+                      transition-colors disabled:opacity-50"
+                  >
+                    {validateLoading ? (
+                      <Loader2 size={14} className="animate-spin" />
+                    ) : (
+                      <ShieldCheck size={14} />
+                    )}
+                    Validate Only
+                  </button>
+                </div>
+              )
+            }
+          ].map((s) => (
+            <section
+              key={s.title}
+              className="
+                w-full sm:w-[calc(50%-0.5rem)] lg:w-full
+                bg-white dark:bg-black
+                border border-gray-300 dark:border-gray-700
+                rounded-md p-4 space-y-3
+                transition-colors
+              "
+            >
+              <h2 className="text-xs font-semibold text-gray-900 dark:text-gray-100">
+                {s.title}
+              </h2>
+              {s.content}
+            </section>
+          ))}*/
+}
+
+
+/* ---------- Small Helpers ---------- */
+
+const Info = ({ label, value }: { label: string; value: string }) => (
+  <div>
+    <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-1">{label}</p>
+    <div
+      className="px-2.5 py-2 text-xs
+      border border-gray-300 dark:border-gray-700
+      rounded-md bg-gray-50 dark:bg-gray-900
+      text-gray-900 dark:text-gray-100"
+    >
+      {value}
+    </div>
+  </div>
+);
+
+const ActionButton = ({
+  loading,
+  disabled,
+  onClick,
+  icon,
+  children
+}: {
+  loading?: boolean;
+  disabled?: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) => (
+  <button
+    onClick={onClick}
+    disabled={disabled || loading}
+    className="
+      w-full flex items-center justify-center gap-2 px-3 py-2 text-xs
+      bg-blue-600 text-white
+      rounded-md
+      hover:bg-blue-700
+      transition-colors disabled:opacity-50
+    "
+  >
+    {loading ? <Loader2 size={14} className="animate-spin" /> : icon}
+    {children}
+  </button>
+);
+
+const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0];
+    if (!selected) return;
+
+    setFile(selected);
+
+    const reader = new FileReader();
+    reader.onload = () => setBase64(reader.result as string);
+    reader.readAsDataURL(selected);
+  };
+
+  const retrieveMetadata = async () => {
+    setRetrieveLoading(true);
+    try {
+      await new Promise((r) => setTimeout(r, 1200));
+      const dummyXml = `<retrieveResponse><status>Success</status></retrieveResponse>`;
+      setXmlResponse(prettyPrintXml(dummyXml));
+    } finally {
+      setRetrieveLoading(false);
+    }
+  };
+
+const [file, setFile] = useState<File | null>(null);
+  const [retrieveLoading, setRetrieveLoading] = useState(false);
+  const [xmlResponse, setXmlResponse] = useState("");
+
+
+ {/* Selectors */}
+      <section className="border border-gray-300 dark:border-gray-700 rounded-md p-4 bg-white dark:bg-black">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Field label="Component">
+            <select
+              className="
+          w-full
+          px-3 py-2
+          text-sm
+          bg-white dark:bg-black
+          text-gray-900 dark:text-gray-100
+          border border-gray-300 dark:border-gray-700
+          rounded-md
+          focus:outline-none
+          focus:ring-2 focus:ring-blue-600/30
+          focus:border-blue-600
+          transition-colors
+        "
+            >
+              <option value="">Select component</option>
+              <option>ApexClass</option>
+              <option>ApexTrigger</option>
+              <option>CustomObject</option>
+            </select>
+          </Field>
+
+          <Field label="Component Type">
+            <select
+              className="
+          w-full
+          px-3 py-2
+          text-sm
+          bg-white dark:bg-black
+          text-gray-900 dark:text-gray-100
+          border border-gray-300 dark:border-gray-700
+          rounded-md
+          focus:outline-none
+          focus:ring-2 focus:ring-blue-600/30
+          focus:border-blue-600
+          transition-colors
+        "
+            >
+              <option value="">Select type</option>
+              <option>Metadata</option>
+              <option>Code</option>
+            </select>
+          </Field>
+        </div>
+      </section>
+
+
+const Field = ({
+  label,
+  children
+}: {
+  label: string;
+  children: React.ReactNode;
+}) => (
+  <div className="space-y-1.5">
+    <label className="text-xs font-medium text-gray-600 dark:text-gray-400">
+      {label}
+    </label>
+    {children}
+  </div>
+);
+
+
+const Th = ({
+  children,
+  align
+}: {
+  children: React.ReactNode;
+  align?: "left" | "center";
+}) => (
+  <th
+    className={`py-2 text-xs font-medium text-gray-600 dark:text-gray-400 ${
+      align === "center" ? "text-center" : "text-left"
+    }`}
+  >
+    {children}
+  </th>
+);
+
+const Td = ({
+  children,
+  strong,
+  muted,
+  align
+}: {
+  children: React.ReactNode;
+  strong?: boolean;
+  muted?: boolean;
+  align?: "left" | "center";
+}) => (
+  <td
+    className={`py-2 ${align === "center" ? "text-center" : "text-left"} ${
+      strong ? "text-gray-900 dark:text-gray-100" : ""
+    } ${
+      muted
+        ? "text-gray-500 dark:text-gray-400"
+        : "text-gray-700 dark:text-gray-300"
+    }`}
+  >
+    {children}
+  </td>
+);
+
+const EmptyState = ({ text }: { text: string }) => (
+  <div className="text-sm text-gray-500 dark:text-gray-400">{text}</div>
+);
+
+
+----------------------useRetrive------------------------
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useOrganizationMappingStore } from "./useOrganizationMapping";
+
+/* ----------------------------------
+ * Core Types
+ * ---------------------------------- */
+
+export type MetadataComponent = {
+  id: string;
+  name: string;
+  componentType: string;
+  category: "Metadata" | "Code";
+  lastUpdated: string;
+  isAvailable: boolean;
+};
+
+export type RetrieveSummary = {
+  status: "IDLE" | "LOADING" | "SUCCESS" | "FAILED";
+  message?: string;
+};
+
+/* ----------------------------------
+ * Hook Contract
+ * ---------------------------------- */
+
+type UseRetrieveResult = {
+  sourceOrg: string | null;
+
+  componentType: string;
+  category: string;
+
+  listOfComponents: MetadataComponent[];
+  filteredComponents: MetadataComponent[];
+  selectedComponents: MetadataComponent[];
+
+  retrieveComponents: () => Promise<void>;
+  toggleComponentSelection: (id: string) => void;
+  clearSelection: () => void;
+
+  setComponentType: (value: string) => void;
+  setCategory: (value: string) => void;
+
+  isLoading: boolean;
+  errorMessage: string | null;
+  summary: RetrieveSummary;
+};
+
+/* ----------------------------------
+ * Hook Implementation
+ * ---------------------------------- */
+
+export const useRetrieve = (): UseRetrieveResult => {
+  const { sourceOrg } = useOrganizationMappingStore();
+
+  const [componentType, setComponentType] = useState("");
+  const [category, setCategory] = useState("");
+
+  const [listOfComponents, setListOfComponents] = useState<MetadataComponent[]>(
+    []
+  );
+
+  const [selectedComponents, setSelectedComponents] = useState<
+    MetadataComponent[]
+  >([]);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const [summary, setSummary] = useState<RetrieveSummary>({
+    status: "IDLE"
+  });
+
+  /* ----------------------------------
+   * Fetch Components (based on sourceOrg)
+   * ---------------------------------- */
+
+  const retrieveComponents = useCallback(async () => {
+    if (!sourceOrg) {
+      setErrorMessage("Source organization is not selected");
+      return;
+    }
+
+    setIsLoading(true);
+    setErrorMessage(null);
+    setSummary({ status: "LOADING" });
+
+    try {
+      await new Promise((r) => setTimeout(r, 1200));
+
+      const mockComponents: MetadataComponent[] = [
+        {
+          id: "1",
+          name: "AccountController",
+          componentType: "ApexClass",
+          category: "Code",
+          lastUpdated: "2025-12-10",
+          isAvailable: true
+        },
+        {
+          id: "2",
+          name: "ContactTrigger",
+          componentType: "ApexTrigger",
+          category: "Code",
+          lastUpdated: "2025-12-08",
+          isAvailable: false
+        },
+        {
+          id: "3",
+          name: "Account",
+          componentType: "CustomObject",
+          category: "Metadata",
+          lastUpdated: "2025-11-29",
+          isAvailable: true
+        }
+      ];
+
+      setListOfComponents(mockComponents);
+      setSummary({
+        status: "SUCCESS",
+        message: `Retrieved ${mockComponents.length} components from ${sourceOrgId}`
+      });
+    } catch {
+      setSummary({ status: "FAILED", message: "Retrieve failed" });
+      setErrorMessage("Failed to retrieve components");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [sourceOrg]);
+
+  /* ----------------------------------
+   * Filtering Logic
+   * ---------------------------------- */
+
+  const filteredComponents = useMemo(() => {
+    return listOfComponents.filter((c) => {
+      if (componentType && c.componentType !== componentType) return false;
+      if (category && c.category !== category) return false;
+      return true;
+    });
+  }, [listOfComponents, componentType, category]);
+
+  /* ----------------------------------
+   * Selection Logic
+   * ---------------------------------- */
+
+  const toggleComponentSelection = (id: string) => {
+    setSelectedComponents((prev) => {
+      const exists = prev.find((c) => c.id === id);
+      if (exists) {
+        return prev.filter((c) => c.id !== id);
+      }
+      const component = listOfComponents.find((c) => c.id === id);
+      return component ? [...prev, component] : prev;
+    });
+  };
+
+  const clearSelection = () => setSelectedComponents([]);
+
+  /* ----------------------------------
+   * Auto-reset when sourceOrg changes
+   * ---------------------------------- */
+
+  useEffect(() => {
+    setListOfComponents([]);
+    setSelectedComponents([]);
+    setComponentType("");
+    setCategory("");
+    setSummary({ status: "IDLE" });
+  }, [sourceOrg]);
+
+  return {
+    sourceOrg,
+
+    componentType,
+    category,
+
+    listOfComponents,
+    filteredComponents,
+    selectedComponents,
+
+    retrieveComponents,
+    toggleComponentSelection,
+    clearSelection,
+
+    setComponentType,
+    setCategory,
+
+    isLoading,
+    errorMessage,
+    summary
+  };
+};
+---------------------------------------
