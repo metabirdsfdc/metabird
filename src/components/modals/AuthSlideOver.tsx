@@ -2,6 +2,7 @@ import axios from "axios";
 import clsx from "clsx";
 import { Lock, Mail, User, X } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
+import { BASE_URL } from "../../api/auth.api";
 import { AuthContext } from "../../context/AuthContext";
 
 type AuthSlideOverProps = {
@@ -30,7 +31,6 @@ const AuthSlideOver: React.FC<AuthSlideOverProps> = ({ open, onClose }) => {
   const [error, setError] = useState<string | null>(null);
   const { login } = useContext(AuthContext);
 
-  /* -------------------- Effects -------------------- */
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -43,7 +43,6 @@ const AuthSlideOver: React.FC<AuthSlideOverProps> = ({ open, onClose }) => {
     setError(null);
   }, [mode, open]);
 
-  /* -------------------- Handlers -------------------- */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({
       ...prev,
@@ -57,8 +56,9 @@ const AuthSlideOver: React.FC<AuthSlideOverProps> = ({ open, onClose }) => {
     setError(null);
 
     try {
-      const url = mode === "login" ? "/api/auth/login" : "/api/auth/signup";
-
+      const url = mode === "login" ? "/login" : "/signup";
+      const finalUrl = `${BASE_URL}${url}`;
+      console.log(finalUrl);
       const payload =
         mode === "login"
           ? { username: form.email, password: form.password }
@@ -68,17 +68,15 @@ const AuthSlideOver: React.FC<AuthSlideOverProps> = ({ open, onClose }) => {
               password: form.password
             };
 
-      const { data } = await axios.post(
-        `http://localhost:8080${url}`,
-        payload,
-        { withCredentials: true }
-      );
+      const { data } = await axios.post(`${BASE_URL}${url}`, payload, {
+        withCredentials: true
+      });
 
       console.log(data);
 
       login(data);
       onClose();
-      //   window.location.href = "/";
+      window.location.href = "/dashboard";
     } catch (err: any) {
       setError(
         err?.response?.data?.message || "Authentication failed. Try again."

@@ -63,10 +63,11 @@ const Deployments: React.FC = () => {
         </div>
 
         <div className="flex-1 min-w-0 overflow-y-auto">
-          <section className="mb-5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-black flex flex-col h-[300px] overflow-y-auto text-white">
-            {results && (
-              <pre
-                className="
+          {results && (
+            <section className="mb-5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-black flex flex-col h-[300px] overflow-y-auto text-white">
+              {results && (
+                <pre
+                  className="
       text-xs
       bg-gray-100 dark:bg-gray-900
       text-gray-900 dark:text-gray-100
@@ -78,11 +79,12 @@ const Deployments: React.FC = () => {
       whitespace-pre-wrap
       break-words
     "
-              >
-                {JSON.stringify(results, null, 2)}
-              </pre>
-            )}
-          </section>
+                >
+                  {JSON.stringify(results, null, 2)}
+                </pre>
+              )}
+            </section>
+          )}
           <section className="border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-black flex flex-col h-full">
             <div className="flex border-b border-gray-300 dark:border-gray-700">
               {[

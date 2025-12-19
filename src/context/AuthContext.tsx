@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         user: data.user
       });
 
-      navigate("/", { replace: true });
+      navigate("/app", { replace: true });
     },
     [navigate]
   );

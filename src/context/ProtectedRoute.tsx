@@ -1,11 +1,21 @@
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import PageSpinner from "../components/modals/PageSpinner";
 import { AuthContext } from "../context/AuthContext";
 
 const ProtectedRoute = () => {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { authState, loading } = useContext(AuthContext);
 
-  if (!isAuthenticated) {
+  if (loading) {
+    return <PageSpinner />;
+  }
+
+  const isValidSession =
+    Boolean(authState.accessToken) &&
+    Boolean(authState.refreshToken) &&
+    Boolean(authState.user);
+
+  if (!isValidSession) {
     return <Navigate to="/" replace />;
   }
 

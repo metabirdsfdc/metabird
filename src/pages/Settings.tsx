@@ -1,7 +1,42 @@
-import { ArrowRight, Bell, Globe, Lock, Trash2, User } from "lucide-react";
-import React from "react";
+import { ArrowRight, LogOut, User as UserIcon } from "lucide-react";
+import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const Settings: React.FC = () => {
+  const { authState, logout } = useContext(AuthContext);
+
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [dirty, setDirty] = useState(false);
+
+  useEffect(() => {
+    if (authState.user) {
+      setFullName(authState.user.fullName);
+      setEmail(authState.user.username);
+    }
+  }, [authState.user]);
+
+  useEffect(() => {
+    if (!authState.user) return;
+
+    setDirty(
+      fullName !== authState.user.fullName || email !== authState.user.username
+    );
+  }, [fullName, email, authState.user]);
+
+  const handleUpdate = () => {
+    console.log("Updating profile:", { fullName, email });
+
+    const updatedUser = {
+      ...authState.user!,
+      fullName,
+      email
+    };
+
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    setDirty(false);
+  };
+
   return (
     <div className="space-y-8">
       <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
@@ -10,28 +45,88 @@ const Settings: React.FC = () => {
 
       <section className="bg-white dark:bg-black border border-gray-300 dark:border-gray-700 rounded-md p-6 space-y-6">
         <div className="flex items-center gap-3">
-          <User className="text-blue-600 dark:text-blue-400" size={22} />
+          <UserIcon className="text-blue-600 dark:text-blue-400" size={22} />
           <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-            Account
+            Account & Security
           </h2>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3">
-            <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                Profile Information
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                Update your name and basic details.
-              </p>
-            </div>
-            <button className="text-sm text-blue-600 dark:text-blue-400 flex items-center gap-1">
-              Edit <ArrowRight size={14} />
-            </button>
+        <div className="space-y-4 border-b border-gray-200 dark:border-gray-700 pb-4">
+          <div>
+            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+              Full Name
+            </label>
+            <input
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              className="text-white w-full rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+            />
           </div>
 
-          <div className="flex items-center justify-between">
+          <div>
+            <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+              Email
+            </label>
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="text-white w-full rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+            />
+          </div>
+
+          {dirty && (
+            <div className="flex justify-end">
+              <button
+                onClick={handleUpdate}
+                className="text-sm text-blue-600 dark:text-blue-400 flex items-center gap-1"
+              >
+                Update Profile <ArrowRight size={14} />
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3">
+          <div>
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Change Password
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Update your account password.
+            </p>
+          </div>
+          <button className="text-sm text-blue-600 dark:text-blue-400 flex items-center gap-1">
+            Change <ArrowRight size={14} />
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between pt-2">
+          <div>
+            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+              Sign out
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Log out from this device.
+            </p>
+          </div>
+          <button
+            onClick={logout}
+            className="text-sm text-red-600 dark:text-red-400 flex items-center gap-1"
+          >
+            Logout <LogOut size={14} />
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Settings;
+
+{
+  /** 
+   
+     <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                 Email Preferences
@@ -44,33 +139,7 @@ const Settings: React.FC = () => {
               Update <ArrowRight size={14} />
             </button>
           </div>
-        </div>
-      </section>
-
-      <section className="bg-white dark:bg-black border border-gray-300 dark:border-gray-700 rounded-md p-6 space-y-6">
-        <div className="flex items-center gap-3">
-          <Lock className="text-blue-600 dark:text-blue-400" size={22} />
-          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-            Security
-          </h2>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3">
-            <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                Change Password
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                Update your account password.
-              </p>
-            </div>
-            <button className="text-sm text-blue-600 dark:text-blue-400 flex items-center gap-1">
-              Change <ArrowRight size={14} />
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between">
+     <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                 Two-Factor Authentication
@@ -83,10 +152,7 @@ const Settings: React.FC = () => {
               Configure <ArrowRight size={14} />
             </button>
           </div>
-        </div>
-      </section>
-
-      <section className="bg-white dark:bg-black border border-gray-300 dark:border-gray-700 rounded-md p-6 space-y-6">
+ <section className="bg-white dark:bg-black border border-gray-300 dark:border-gray-700 rounded-md p-6 space-y-6">
         <div className="flex items-center gap-3">
           <Bell className="text-blue-600 dark:text-blue-400" size={22} />
           <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
@@ -174,8 +240,6 @@ const Settings: React.FC = () => {
           Reset Settings
         </button>
       </section>
-    </div>
-  );
-};
-
-export default Settings;
+    
+*/
+}

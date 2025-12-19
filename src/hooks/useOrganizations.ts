@@ -2,8 +2,6 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import type { OAuthCredRequest } from "../components/modals/AddOrganizationModal";
 
-/* ======================= TYPES ======================= */
-
 export interface SalesforceSession {
   userId: string;
   organizationId: string;
@@ -34,9 +32,7 @@ interface UseOrganizationsResult {
   deleteOrg: (email: string) => Promise<void>;
 }
 
-/* ======================= CONFIG ======================= */
-
-const BASE_URL = "http://localhost:8080/api/organizations";
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
 const axiosClient = axios.create({
   baseURL: BASE_URL,
@@ -46,8 +42,6 @@ const axiosClient = axios.create({
   }
 });
 
-/* ======================= HOOK ======================= */
-
 export const useOrganizations = (): UseOrganizationsResult => {
   const [organizationList, setOrganizationList] = useState<SalesforceSession[]>(
     []
@@ -55,15 +49,15 @@ export const useOrganizations = (): UseOrganizationsResult => {
   const [isLoadingOrganizations, setIsLoadingOrganizations] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  /* ----------------------- GET ALL ----------------------- */
   const getAll = useCallback(async () => {
     setIsLoadingOrganizations(true);
     setLoadError(null);
 
     try {
       const res = await axiosClient.get<SalesforceSession[]>("");
-      setOrganizationList(res.data);
+      setOrganizationList(Array.isArray(res.data) ? res.data : []);
     } catch (e) {
+      setOrganizationList([]);
       setLoadError(
         axios.isAxiosError(e)
           ? e.response?.data?.message ?? "Failed to load organizations"
@@ -74,7 +68,6 @@ export const useOrganizations = (): UseOrganizationsResult => {
     }
   }, []);
 
-  /* ----------------------- READ ----------------------- */
   const read = useCallback(async (email: string) => {
     try {
       const res = await axiosClient.get<SalesforceSession>(
@@ -90,7 +83,6 @@ export const useOrganizations = (): UseOrganizationsResult => {
     }
   }, []);
 
-  /* ----------------------- CREATE ----------------------- */
   const create = useCallback(
     async (session: OAuthCredRequest) => {
       console.log("Clicked");
@@ -111,16 +103,13 @@ export const useOrganizations = (): UseOrganizationsResult => {
     [getAll]
   );
 
-  /* ----------------------- UPDATE ----------------------- */
   const update = useCallback(
     async (session: OAuthCredRequest) => {
-      // same endpoint as create (upsert semantics)
       await create(session);
     },
     [create]
   );
 
-  /* ----------------------- DELETE ----------------------- */
   const deleteOrg = useCallback(async (email: string) => {
     setIsLoadingOrganizations(true);
     setLoadError(null);
@@ -137,7 +126,6 @@ export const useOrganizations = (): UseOrganizationsResult => {
     }
   }, []);
 
-  /* ----------------------- INITIAL LOAD ----------------------- */
   useEffect(() => {
     getAll();
   }, [getAll]);

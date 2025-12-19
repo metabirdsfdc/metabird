@@ -1,13 +1,7 @@
-import {
-  Building,
-  Gauge,
-  HelpCircle,
-  History,
-  Layers,
-  Palette,
-  Settings
-} from "lucide-react";
+import { Building, Layers, Settings } from "lucide-react";
 import { create } from "zustand";
+
+const ACTIVE_KEY = "nav_active";
 
 export interface NavItem {
   id: string;
@@ -27,59 +21,52 @@ interface NavState {
 export const useNavStore = create<NavState>((set, get) => ({
   items: [
     {
-      id: "dashboard",
-      label: "Dashboard",
-      icon: <Gauge size={18} />,
-      path: "/"
-    },
-    {
       id: "deployments",
       label: "Deployments",
       icon: <Layers size={18} />,
-      path: "/deployments"
-    },
-    {
-      id: "history",
-      label: "History",
-      icon: <History size={18} />,
-      path: "/history"
+      path: "/app"
     },
     {
       id: "orgs",
       label: "Manage Orgs",
       icon: <Building size={18} />,
-      path: "/organizations"
+      path: "/app/orgs"
     },
-
-    // Bottom section
     {
       id: "settings",
       label: "Settings",
       icon: <Settings size={18} />,
-      path: "/settings"
-    },
-    {
-      id: "personalization",
-      label: "Personalization",
-      icon: <Palette size={18} />,
-      path: "/personalization"
-    },
-    {
-      id: "help",
-      label: "Help & About",
-      icon: <HelpCircle size={18} />,
-      path: "/help"
+      path: "/app/settings"
     }
   ],
 
-  active: "dashboard",
+  active: localStorage.getItem(ACTIVE_KEY) || "dashboard",
 
-  setActive: (id) => set({ active: id }),
-
-  getActiveItem: () => {
-    const state = get();
-    return state.items.find((i) => i.id === state.active);
+  setActive: (id) => {
+    localStorage.setItem(ACTIVE_KEY, id);
+    set({ active: id });
   },
 
-  reset: () => set({ active: "dashboard" })
+  getActiveItem: () => {
+    const { items, active } = get();
+    return items.find((i) => i.id === active);
+  },
+
+  reset: () => {
+    localStorage.removeItem(ACTIVE_KEY);
+    set({ active: "dashboard" });
+  }
 }));
+
+// {
+//   id: "personalization",
+//   label: "Personalization",
+//   icon: <Palette size={18} />,
+//   path: "/app/personalization"
+// },
+// {
+//   id: "help",
+//   label: "Help & About",
+//   icon: <HelpCircle size={18} />,
+//   path: "/app/help"
+// }

@@ -1,4 +1,4 @@
-import { Download, Loader2, PlayCircle } from "lucide-react";
+import { Loader2, PlayCircle } from "lucide-react";
 import React, { useEffect } from "react";
 import { useActions, type DeployResult } from "../hooks/useActions";
 import type { Component } from "./AllComponents";
@@ -10,7 +10,7 @@ type Props = {
 };
 
 const Actions: React.FC<Props> = ({ selectedItems, handleSetResults }) => {
-  const { deploy, isDeploying, retrieve, isRetrieving, result } = useActions();
+  const { deploy, isDeploying, result } = useActions();
   useEffect(() => {
     handleSetResults(result);
   }, [result]);
@@ -49,7 +49,7 @@ const Actions: React.FC<Props> = ({ selectedItems, handleSetResults }) => {
           Deploy
         </button>
 
-        <button
+        {/* <button
           onClick={() => retrieve(selectedItems)}
           disabled={isRetrieving}
           className="
@@ -67,7 +67,7 @@ const Actions: React.FC<Props> = ({ selectedItems, handleSetResults }) => {
             <Download size={14} />
           )}
           Retrieve
-        </button>
+        </button> */}
       </div>
     </section>
   );

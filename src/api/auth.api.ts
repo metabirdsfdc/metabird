@@ -10,7 +10,7 @@ export type AuthResponse = {
   };
 };
 
-const BASE_URL = "http://localhost:8080/api/auth/user_auth";
+export const BASE_URL = "https://metabird-backend.onrender.com/api/auth";
 
 export const loginApi = async (payload: {
   username: string;

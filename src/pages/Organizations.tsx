@@ -49,68 +49,73 @@ const Organizations: React.FC = () => {
       )}
 
       <div className="space-y-3">
-        {organizationList.map((org) => (
-          <div
-            key={org.userEmail}
-            className="
+        {Array.isArray(organizationList) &&
+          organizationList.map((org) => (
+            <div
+              key={org.userEmail}
+              className="
               flex items-center justify-between
               bg-white dark:bg-black
               border border-gray-200 dark:border-gray-800
               rounded-md px-4 py-3
               transition hover:bg-gray-50 dark:hover:bg-gray-900
             "
-          >
-            <div className="flex items-center gap-3">
-              <Building2
-                size={22}
-                className="text-blue-600 dark:text-blue-400"
-              />
+            >
+              <div className="flex items-center gap-3">
+                <Building2
+                  size={22}
+                  className="text-blue-600 dark:text-blue-400"
+                />
 
-              <div className="leading-tight">
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                  {org.organizationName}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {org.organizationId === "sandbox" ? "Sandbox" : "Production"}
-                </p>
-                <p className="text-xs text-gray-400 dark:text-gray-500">
-                  {org.userEmail}
-                </p>
+                <div className="leading-tight">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {org.organizationName}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {org.organizationId === "sandbox"
+                      ? "Sandbox"
+                      : "Production"}
+                  </p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500">
+                    {org.userEmail}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                  onClick={openAddModal}
+                >
+                  <Pencil
+                    size={16}
+                    className="text-gray-600 dark:text-gray-300"
+                  />
+                </button>
+
+                <button
+                  onClick={() => deleteOrg(org.userEmail)}
+                  className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                >
+                  <Trash2
+                    size={16}
+                    className="text-gray-600 dark:text-gray-300"
+                  />
+                </button>
               </div>
             </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-                onClick={openAddModal}
-              >
-                <Pencil
-                  size={16}
-                  className="text-gray-600 dark:text-gray-300"
-                />
-              </button>
-
-              <button
-                onClick={() => deleteOrg(org.userEmail)}
-                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-              >
-                <Trash2
-                  size={16}
-                  className="text-gray-600 dark:text-gray-300"
-                />
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
 
-      {!isLoadingOrganizations && organizationList.length === 0 && (
-        <div className="text-center py-16 text-sm text-gray-500 dark:text-gray-400">
-          No organizations added yet.
-        </div>
-      )}
+      {!isLoadingOrganizations &&
+        Array.isArray(organizationList) &&
+        organizationList.length === 0 && (
+          <div className="text-center py-16 text-sm text-gray-500 dark:text-gray-400">
+            No organizations added yet.
+          </div>
+        )}
 
-      <AddOrganizationModal create={create}/>
+      <AddOrganizationModal create={create} />
     </div>
   );
 };

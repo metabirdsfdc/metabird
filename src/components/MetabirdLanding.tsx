@@ -7,7 +7,6 @@ const MetabirdLanding: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-black">
-      {/* Header */}
       <header className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -34,7 +33,6 @@ const MetabirdLanding: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero */}
       <main className="flex-1">
         <section className="max-w-7xl mx-auto px-6 py-16">
           <div className="max-w-3xl">
@@ -66,7 +64,6 @@ const MetabirdLanding: React.FC = () => {
           </div>
         </section>
 
-        {/* Features */}
         <section className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
           <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -110,7 +107,6 @@ const MetabirdLanding: React.FC = () => {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs text-gray-500 dark:text-gray-400">

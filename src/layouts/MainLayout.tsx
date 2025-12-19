@@ -2,7 +2,6 @@ import clsx from "clsx";
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import Theme from "../components/Theme";
 import { useSidebarStore } from "../hooks/useSidebarStore";
 
 const MainLayout: React.FC = () => {
@@ -20,18 +19,15 @@ const MainLayout: React.FC = () => {
       >
         <header
           className="
-            h-16 flex items-center justify-between px-6
-            bg-white dark:bg-gray-900
-            border-b border-gray-200 dark:border-gray-800
-            shadow-sm transition-all
-          "
+    h-16 flex items-center justify-between px-6
+    bg-white/80 dark:bg-gray-950/80
+    backdrop-blur-md
+    border-b border-gray-200/60 dark:border-gray-800/60
+    transition-all
+  "
         >
-          <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">
+          <div className="text-base font-semibold tracking-wide text-blue-900 dark:text-blue-900">
             Metabird
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Theme />
           </div>
         </header>
 

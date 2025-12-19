@@ -64,13 +64,6 @@ const OrgSelect: React.FC<OrgSelectProps> = ({
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
-
-    console.log("[OrgSelect] Change detected", {
-      label,
-      previousValue: value,
-      nextValue: selectedValue
-    });
-
     onChange(selectedValue);
   };
 
@@ -80,29 +73,35 @@ const OrgSelect: React.FC<OrgSelectProps> = ({
         {label}
       </p>
 
-      <select
-        value={value ?? ""}
-        onChange={handleChange}
-        className="
-          w-full px-2.5 py-2 text-xs
-          bg-white dark:bg-black
-          text-gray-900 dark:text-gray-100
-          border border-gray-300 dark:border-gray-700
-          rounded-md
-          focus:outline-none
-          focus:ring-2 focus:ring-blue-600/30
-          focus:border-blue-600
-          transition-colors
-        "
-      >
-        <option value="">Select organization</option>
+      {Array.isArray(organizations) && organizations.length > 0 ? (
+        <select
+          value={value ?? ""}
+          onChange={handleChange}
+          className="
+            w-full px-2.5 py-2 text-xs
+            bg-white dark:bg-black
+            text-gray-900 dark:text-gray-100
+            border border-gray-300 dark:border-gray-700
+            rounded-md
+            focus:outline-none
+            focus:ring-2 focus:ring-blue-600/30
+            focus:border-blue-600
+            transition-colors
+          "
+        >
+          <option value="">Select organization</option>
 
-        {organizations.map((org) => (
-          <option key={org.userId} value={org.userId}>
-            {org.organizationName}
-          </option>
-        ))}
-      </select>
+          {organizations.map((org) => (
+            <option key={org.userId} value={org.userId}>
+              {org.organizationName}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <div className="text-xs text-gray-500 dark:text-gray-400 py-2 px-2 border border-gray-300 dark:border-gray-700 rounded-md">
+          No organizations available
+        </div>
+      )}
     </div>
   );
 };

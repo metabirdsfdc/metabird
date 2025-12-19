@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { X } from "lucide-react";
+import { Bird, X } from "lucide-react";
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
@@ -9,9 +9,9 @@ import { useSidebarStore } from "../hooks/useSidebarStore";
 const Sidebar: React.FC = () => {
   const { isOpen, toggle } = useSidebarStore();
   const { items, active, setActive } = useNavStore();
+  const { authState } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const { logout } = useContext(AuthContext);
   return (
     <div
       className={clsx(
@@ -38,14 +38,18 @@ const Sidebar: React.FC = () => {
           >
             <div
               role="button"
-              className={clsx(
-                "rounded-full bg-gray-300 dark:bg-blue-700 flex-shrink-0 transition-all duration-300 cursor-pointer",
-                isOpen ? "w-10 h-10" : "w-8 h-8"
-              )}
               onClick={() => {
                 if (!isOpen) toggle();
               }}
-            />
+              className={clsx(
+                "flex items-center justify-center rounded-full flex-shrink-0 cursor-pointer transition-all duration-300",
+                isOpen ? "w-10 h-10" : "w-8 h-8",
+                "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
+                "hover:bg-gray-300 dark:hover:bg-gray-700"
+              )}
+            >
+              <Bird className="w-4 h-4" />
+            </div>
 
             <div
               className={clsx(
@@ -56,15 +60,17 @@ const Sidebar: React.FC = () => {
               )}
             >
               <p className="font-medium text-sm text-gray-900 dark:text-gray-100">
-                Pavan Kalyan
+                {authState.user?.fullName}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Admin</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {authState.user?.username}
+              </p>
             </div>
           </div>
         </div>
 
         <nav className="flex-1 px-2 space-y-1 mt-2">
-          {items.slice(0, 4).map((item) => (
+          {items.map((item) => (
             <SidebarItem
               key={item.id}
               icon={item.icon}
@@ -78,42 +84,6 @@ const Sidebar: React.FC = () => {
             />
           ))}
         </nav>
-
-        <div className="px-2 py-4 border-t border-gray-200 dark:border-gray-800 space-y-1">
-          {items.slice(4).map((item) => (
-            <SidebarItem
-              key={item.id}
-              icon={item.icon}
-              label={item.label}
-              isOpen={isOpen}
-              active={active === item.id}
-              onClick={() => {
-                setActive(item.id);
-                navigate(item.path);
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="flex items-center justify-center">
-          <button
-            onClick={logout}
-            className="
-      px-3 py-1.5
-      text-sm font-medium
-      rounded-md
-      border border-gray-300
-      text-gray-700
-      hover:bg-gray-100
-      transition
-      dark:border-gray-700
-      dark:text-gray-300
-      dark:hover:bg-gray-900
-    "
-          >
-            Logout
-          </button>
-        </div>
       </div>
     </div>
   );
@@ -140,17 +110,26 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
     <div
       onClick={onClick}
       className={clsx(
-        "flex items-center rounded-md cursor-pointer px-3 py-2 transition-colors",
+        "group flex items-center rounded-md cursor-pointer px-3 py-2 transition-all duration-200",
         active
-          ? "bg-blue-600 text-white"
-          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900"
+          ? "bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+          : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900"
       )}
     >
-      <div className="flex items-center justify-center w-6 text-sm">{icon}</div>
+      <div
+        className={clsx(
+          "flex items-center justify-center w-6 transition-colors",
+          active
+            ? "text-gray-900 dark:text-gray-100"
+            : "text-gray-500 dark:text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300"
+        )}
+      >
+        {icon}
+      </div>
 
       <span
         className={clsx(
-          "ml-3 text-sm font-medium whitespace-nowrap transform transition-all duration-300",
+          "ml-3 text-xs font-medium tracking-wide whitespace-nowrap transition-all duration-300",
           isOpen
             ? "opacity-100 translate-x-0"
             : "opacity-0 -translate-x-4 pointer-events-none"

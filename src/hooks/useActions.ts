@@ -52,7 +52,7 @@ type UseActionsResult = {
   retrieve: (selectedItems: Component[]) => Promise<void>;
   isDeploying: boolean;
   isRetrieving: boolean;
-  result: DeployResult | null; // 👈 added
+  result: DeployResult | null;
 };
 
 const buildPayload = (components: Component[]): RetrievePayload[] => {
@@ -69,11 +69,13 @@ const buildPayload = (components: Component[]): RetrievePayload[] => {
   }));
 };
 
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+
 export const useActions = (): UseActionsResult => {
   const [isDeploying, setIsDeploying] = useState(false);
   const [isRetrieving, setIsRetrieving] = useState(false);
-  const [result, setResult] = useState<DeployResult | null>(null); // 👈 added
-  const { sourceOrg } = useOrganizationMappingStore();
+  const [result, setResult] = useState<DeployResult | null>(null);
+  const { sourceOrg, targetOrg } = useOrganizationMappingStore();
 
   const deploy = useCallback(async (selectedItems: Component[]) => {
     if (!selectedItems.length) {
@@ -84,13 +86,13 @@ export const useActions = (): UseActionsResult => {
     const payload = buildPayload(selectedItems);
     setIsDeploying(true);
     setResult(null);
-    console.log("Started.", payload, sourceOrg);
+    console.log("Started.", payload, targetOrg);
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/metadata/retrieve_and_deploy",
+        `${BASE_URL}/api/metadata/deployements/execute`,
         {
-          userId: sourceOrg,
+          userId: targetOrg,
           types: payload
         },
         {
@@ -121,11 +123,11 @@ export const useActions = (): UseActionsResult => {
 
     const payload = buildPayload(selectedItems);
     setIsRetrieving(true);
-    setResult(null); // reset
+    setResult(null);
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/metadata/retrieve_and_validate",
+        `${BASE_URL}/api/metadata/deployments/retrieve`,
         {
           userId: sourceOrg,
           types: payload
@@ -137,10 +139,10 @@ export const useActions = (): UseActionsResult => {
         }
       );
       console.log("Retrieve successful:", response.data);
-      setResult(response.data); // 👈 store result
+      setResult(response.data);
     } catch (error: any) {
       console.error("Retrieve failed:", error);
-      setResult(error?.response?.data || error); // 👈 store error result
+      setResult(error?.response?.data || error);
       alert(
         error?.response?.data?.message || "Retrieve failed. Please try again."
       );
@@ -154,6 +156,6 @@ export const useActions = (): UseActionsResult => {
     retrieve,
     isDeploying,
     isRetrieving,
-    result // 👈 returned
+    result
   };
 };
