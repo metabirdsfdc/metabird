@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
+import { deploymentsApi } from "../api/deployments.api";
 import type { Component } from "../components/AllComponents";
 import { useOrganizationMappingStore } from "./useOrganizationMapping";
-import { deploymentsApi } from "../api/deployments.api";
 
 export type RetrievePayload = {
   name: string;
@@ -91,9 +91,7 @@ export const useActions = () => {
       try {
         const res = await deploymentsApi.deploy(targetOrg!, payload);
         setResult(res);
-        console.log("Deployment successful:", res);
       } catch (error: any) {
-        console.error("Deployment failed:", error);
         setResult(error?.response?.data || null);
 
         alert(

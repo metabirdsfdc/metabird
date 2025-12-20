@@ -21,13 +21,7 @@ const MetabirdLanding: React.FC = () => {
               onClick={() => setAuthOpen(true)}
               className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-700 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900"
             >
-              Login
-            </button>
-            <button
-              onClick={() => setAuthOpen(true)}
-              className="px-3 py-1.5 text-sm rounded-md bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Sign up
+              Login / Sign Up
             </button>
           </div>
         </div>
@@ -38,13 +32,14 @@ const MetabirdLanding: React.FC = () => {
           <div className="max-w-3xl">
             <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
               Salesforce Metadata Deployments,
-              <br /> Made Simple
+              <br />
+              Made Simple
             </h1>
 
             <p className="mt-4 text-gray-600 dark:text-gray-400">
               Metabird helps teams retrieve, deploy, and track Salesforce
-              metadata with clarity — inspired by Workbench and Copado, built
-              for developers.
+              metadata with clarity, enabling Salesforce employees to manage
+              deployments efficiently and with confidence.
             </p>
 
             <div className="mt-6 flex gap-3">
@@ -85,7 +80,7 @@ const MetabirdLanding: React.FC = () => {
               {
                 icon: <Bird size={22} />,
                 title: "Developer First",
-                desc: "Built for admins and developers who value clarity."
+                desc: "Designed for admins and developers who value clarity."
               }
             ].map((item, idx) => (
               <div
@@ -108,26 +103,39 @@ const MetabirdLanding: React.FC = () => {
       </main>
 
       <footer className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            © {new Date().getFullYear()} Metabird. All rights reserved.
-          </p>
+        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-sm text-gray-600 dark:text-gray-400 flex flex-col sm:flex-row items-center gap-2">
+            <span>
+              © {new Date().getFullYear()} Metabird. All rights reserved.
+            </span>
+            <span className="hidden sm:inline">•</span>
+            <span className="font-medium text-gray-800 dark:text-gray-200">
+              Developed by Suddala Pavan Kalyan
+            </span>
+            <a
+              href="https://www.linkedin.com/in/suddala-pavan-kalyan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              LinkedIn
+            </a>
+          </div>
 
-          <div className="flex gap-4 text-xs text-gray-500 dark:text-gray-400">
-            <button className="hover:text-gray-700 dark:hover:text-gray-300">
+          <div className="flex gap-6 text-sm text-gray-600 dark:text-gray-400">
+            <button className="hover:text-gray-800 dark:hover:text-gray-200">
               Privacy
             </button>
-            <button className="hover:text-gray-700 dark:hover:text-gray-300">
+            <button className="hover:text-gray-800 dark:hover:text-gray-200">
               Terms
             </button>
-            <button className="hover:text-gray-700 dark:hover:text-gray-300">
+            <button className="hover:text-gray-800 dark:hover:text-gray-200">
               Support
             </button>
           </div>
         </div>
       </footer>
 
-      {/* Slide-in Auth */}
       <AuthSlideOver open={authOpen} onClose={() => setAuthOpen(false)} />
     </div>
   );
