@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import MetabirdLanding from "./components/MetabirdLanding";
@@ -8,6 +8,7 @@ import ProtectedRoute from "./context/ProtectedRoute";
 import PublicRoute from "./context/PublicRoute";
 import MainLayout from "./layouts/MainLayout";
 
+import { useOrganizations } from "./hooks/useOrganizations";
 import Deployments from "./pages/Deployments";
 import NotFound from "./pages/NotFound";
 import Organizations from "./pages/Organizations";
@@ -15,6 +16,13 @@ import Settings from "./pages/Settings";
 
 const App: React.FC = () => {
   const { loading } = useContext(AuthContext);
+  const getAll = useOrganizations((s) => s.getAll);
+
+  useEffect(() => {
+    if (!loading) {
+      getAll();
+    }
+  }, [loading, getAll]);
 
   if (loading) return <PageSpinner />;
 

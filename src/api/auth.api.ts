@@ -10,7 +10,7 @@ export type AuthResponse = {
   };
 };
 
-export const BASE_URL = "https://metabird-backend.onrender.com/api/auth";
+export const BASE_URL = `${import.meta.env.VITE_APP_BASE_URL}/api/auth`;
 
 export const loginApi = async (payload: {
   username: string;

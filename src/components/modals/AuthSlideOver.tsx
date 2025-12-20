@@ -76,7 +76,7 @@ const AuthSlideOver: React.FC<AuthSlideOverProps> = ({ open, onClose }) => {
 
       login(data);
       onClose();
-      window.location.href = "/dashboard";
+      window.location.href = "/";
     } catch (err: any) {
       setError(
         err?.response?.data?.message || "Authentication failed. Try again."
@@ -86,10 +86,8 @@ const AuthSlideOver: React.FC<AuthSlideOverProps> = ({ open, onClose }) => {
     }
   };
 
-  /* -------------------- UI -------------------- */
   return (
     <>
-      {/* Backdrop */}
       <div
         onClick={onClose}
         className={clsx(
@@ -98,7 +96,6 @@ const AuthSlideOver: React.FC<AuthSlideOverProps> = ({ open, onClose }) => {
         )}
       />
 
-      {/* Slide Panel */}
       <div
         className={clsx(
           "fixed inset-y-0 right-0 z-50 w-full sm:w-[420px]",
@@ -109,7 +106,6 @@ const AuthSlideOver: React.FC<AuthSlideOverProps> = ({ open, onClose }) => {
         )}
       >
         <div className="flex h-full flex-col p-6 space-y-6">
-          {/* Header */}
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-black dark:text-white">
               {mode === "login" ? "Sign In" : "Create Account"}
@@ -125,14 +121,12 @@ const AuthSlideOver: React.FC<AuthSlideOverProps> = ({ open, onClose }) => {
               : "Start managing Salesforce metadata"}
           </p>
 
-          {/* Error */}
           {error && (
             <div className="rounded border border-gray-700 bg-gray-900 p-2 text-sm text-white">
               {error}
             </div>
           )}
 
-          {/* Form */}
           <form className="space-y-4" onSubmit={handleSubmit}>
             {mode === "signup" && (
               <div>

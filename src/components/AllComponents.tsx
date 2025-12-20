@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   fetchMetadataComponents,
   fetchMetadataTypes
-} from "../hooks/allComponents.api";
+} from "../api/types.api";
 import { useOrganizationMappingStore } from "../hooks/useOrganizationMapping";
 import { buildColumns, type ComponentFilterKey } from "../services/records";
 import SearchableSelect from "./SearchableSelect";
@@ -41,16 +41,11 @@ const AllComponents: React.FC<TabBProps> = ({
 
   const { sourceOrg } = useOrganizationMappingStore();
 
-  /* ======================= LOAD TYPES ======================= */
-
   useEffect(() => {
-    console.log(sourceOrg);
     if (!sourceOrg) return;
 
     fetchMetadataTypes(sourceOrg).then(setTypes).catch(console.error);
   }, [sourceOrg]);
-
-  /* ======================= LOAD COMPONENTS ======================= */
 
   useEffect(() => {
     if (!sourceOrg || !selectedType) return;

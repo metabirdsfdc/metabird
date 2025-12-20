@@ -1,7 +1,5 @@
 import axios from "axios";
 
-/* ======================= TYPES ======================= */
-
 export type Component = {
   id: string;
   name: string;
@@ -13,16 +11,11 @@ export type Component = {
   select?: boolean;
 };
 
-/* ======================= CONFIG ======================= */
-
-const BASE_URL = "http://localhost:8080/api/metadata";
-
-/* ======================= API CALLS ======================= */
+const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
 export const fetchMetadataTypes = async (userId: string): Promise<string[]> => {
-  console.log("Hello");
   const res = await axios.post<string[]>(
-    `${BASE_URL}/types`,
+    `${BASE_URL}/api/metadata/types`,
     { userId, type: "" },
     {
       headers: {
@@ -39,7 +32,7 @@ export const fetchMetadataComponents = async (
   type: string
 ): Promise<Component[]> => {
   const res = await axios.post<Component[]>(
-    `${BASE_URL}/components`,
+    `${BASE_URL}/api/metadata/components`,
     { userId, type },
     {
       headers: {

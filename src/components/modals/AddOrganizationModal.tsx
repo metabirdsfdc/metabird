@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { useOrganizations } from "../../hooks/useOrganizations";
 import { useOrganizationStore } from "../../hooks/useOrganizationStore";
 import PageSpinner from "./PageSpinner";
 
@@ -11,11 +12,12 @@ export type OAuthCredRequest = {
   securityToken: string;
 };
 
-type Props = {
-  create: (session: OAuthCredRequest) => Promise<void>;
-};
-const AddOrganizationModal: React.FC<Props> = ({ create }) => {
+// type Props = {
+//   create: (session: OAuthCredRequest) => Promise<void>;
+// };
+const AddOrganizationModal: React.FC = () => {
   const { isAddModalOpen, closeAddModal } = useOrganizationStore();
+  const { create } = useOrganizations();
 
   const [form, setForm] = useState<OAuthCredRequest>({
     name: "",
@@ -56,6 +58,7 @@ const AddOrganizationModal: React.FC<Props> = ({ create }) => {
     setErrorMessage(null);
 
     try {
+      console.log(form);
       await create(form);
       closeAddModal();
       clearForm();

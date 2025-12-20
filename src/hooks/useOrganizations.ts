@@ -1,5 +1,5 @@
-import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { create } from "zustand";
+import { organizationsApi } from "../api/organizations.api";
 import type { OAuthCredRequest } from "../components/modals/AddOrganizationModal";
 
 export interface SalesforceSession {
@@ -20,7 +20,7 @@ export interface SalesforceSession {
   sessionSecondsValid: number;
 }
 
-interface UseOrganizationsResult {
+interface OrganizationsState {
   organizationList: SalesforceSession[];
   isLoadingOrganizations: boolean;
   loadError: string | null;
@@ -32,113 +32,84 @@ interface UseOrganizationsResult {
   deleteOrg: (email: string) => Promise<void>;
 }
 
-const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+export const useOrganizations = create<OrganizationsState>((set, get) => ({
+  organizationList: [],
+  isLoadingOrganizations: false,
+  loadError: null,
 
-const axiosClient = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-    "Content-Type": "application/json"
-  }
-});
+  getAll: async () => {
+    const { isLoadingOrganizations, organizationList } = get();
 
-export const useOrganizations = (): UseOrganizationsResult => {
-  const [organizationList, setOrganizationList] = useState<SalesforceSession[]>(
-    []
-  );
-  const [isLoadingOrganizations, setIsLoadingOrganizations] = useState(false);
-  const [loadError, setLoadError] = useState<string | null>(null);
-
-  const getAll = useCallback(async () => {
-    setIsLoadingOrganizations(true);
-    setLoadError(null);
-
-    try {
-      const res = await axiosClient.get<SalesforceSession[]>("");
-      setOrganizationList(Array.isArray(res.data) ? res.data : []);
-    } catch (e) {
-      setOrganizationList([]);
-      setLoadError(
-        axios.isAxiosError(e)
-          ? e.response?.data?.message ?? "Failed to load organizations"
-          : "Failed to load organizations"
-      );
-    } finally {
-      setIsLoadingOrganizations(false);
+    if (isLoadingOrganizations || organizationList.length > 0) {
+      return;
     }
-  }, []);
 
-  const read = useCallback(async (email: string) => {
+    set({ isLoadingOrganizations: true, loadError: null });
+
     try {
-      const res = await axiosClient.get<SalesforceSession>(
-        `/${encodeURIComponent(email)}`
-      );
-      return res.data;
-    } catch (e) {
-      if (axios.isAxiosError(e) && e.response?.status === 404) {
-        return null;
-      }
-      setLoadError("Read failed");
+      const list = await organizationsApi.getAll();
+
+      set({
+        organizationList: Array.isArray(list) ? list : [],
+        loadError: null
+      });
+    } catch (e: any) {
+      set({
+        organizationList: [],
+        loadError: e?.response?.data?.message ?? "Failed to load organizations"
+      });
+    } finally {
+      set({ isLoadingOrganizations: false });
+    }
+  },
+
+  read: async (email) => {
+    try {
+      return await organizationsApi.read(email);
+    } catch {
+      set({ loadError: "Read failed" });
       return null;
     }
-  }, []);
+  },
 
-  const create = useCallback(
-    async (session: OAuthCredRequest) => {
-      console.log("Clicked");
-      setIsLoadingOrganizations(true);
-      setLoadError(null);
-
-      try {
-        console.log("Clicked22");
-        await axiosClient.post("", session);
-        console.log("Clicked33");
-        await getAll(); // refresh list
-      } catch (e) {
-        setLoadError("Create failed");
-      } finally {
-        setIsLoadingOrganizations(false);
-      }
-    },
-    [getAll]
-  );
-
-  const update = useCallback(
-    async (session: OAuthCredRequest) => {
-      await create(session);
-    },
-    [create]
-  );
-
-  const deleteOrg = useCallback(async (email: string) => {
-    setIsLoadingOrganizations(true);
-    setLoadError(null);
+  create: async (session) => {
+    set({ isLoadingOrganizations: true, loadError: null });
 
     try {
-      await axiosClient.delete(`/${encodeURIComponent(email)}`);
-      setOrganizationList((prev) =>
-        prev.filter((org) => org.userEmail !== email)
-      );
-    } catch (e) {
-      setLoadError("Delete failed");
+      await organizationsApi.create(session);
+      await get().getAll();
+    } catch (e: any) {
+      const message =
+        e?.response?.data?.message ??
+        (e?.response?.status === 401 || e?.response?.status === 403
+          ? "Authentication failed. Please check your credentials."
+          : "Create failed");
+
+      set({ loadError: message });
+      console.error("Create error:", message);
     } finally {
-      setIsLoadingOrganizations(false);
+      set({ isLoadingOrganizations: false });
     }
-  }, []);
+  },
 
-  useEffect(() => {
-    getAll();
-  }, [getAll]);
+  update: async (session) => {
+    await get().create(session);
+  },
 
-  return {
-    organizationList,
-    isLoadingOrganizations,
-    loadError,
+  deleteOrg: async (email) => {
+    set({ isLoadingOrganizations: true, loadError: null });
 
-    getAll,
-    read,
-    create,
-    update,
-    deleteOrg
-  };
-};
+    try {
+      await organizationsApi.delete(email);
+      set((state) => ({
+        organizationList: state.organizationList.filter(
+          (org) => org.userEmail !== email
+        )
+      }));
+    } catch {
+      set({ loadError: "Delete failed" });
+    } finally {
+      set({ isLoadingOrganizations: false });
+    }
+  }
+}));

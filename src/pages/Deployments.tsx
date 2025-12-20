@@ -16,6 +16,7 @@ const Deployments: React.FC = () => {
   const handleSetResults = (results: DeployResult | null) => {
     setResults(results);
   };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">

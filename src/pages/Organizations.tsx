@@ -7,13 +7,8 @@ import { useOrganizations } from "../hooks/useOrganizations";
 const Organizations: React.FC = () => {
   const { openAddModal } = useOrganizationStore();
 
-  const {
-    organizationList,
-    isLoadingOrganizations,
-    loadError,
-    create,
-    deleteOrg
-  } = useOrganizations();
+  const { organizationList, isLoadingOrganizations, loadError, deleteOrg } =
+    useOrganizations();
 
   return (
     <div className="space-y-5 relative">
@@ -94,7 +89,7 @@ const Organizations: React.FC = () => {
                 </button>
 
                 <button
-                  onClick={() => deleteOrg(org.userEmail)}
+                  onClick={() => deleteOrg(org.userId)}
                   className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
                 >
                   <Trash2
@@ -115,7 +110,7 @@ const Organizations: React.FC = () => {
           </div>
         )}
 
-      <AddOrganizationModal create={create} />
+      <AddOrganizationModal />
     </div>
   );
 };

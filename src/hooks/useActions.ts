@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useCallback, useState } from "react";
 import type { Component } from "../components/AllComponents";
 import { useOrganizationMappingStore } from "./useOrganizationMapping";
+import { deploymentsApi } from "../api/deployments.api";
 
 export type RetrievePayload = {
   name: string;
@@ -47,13 +47,13 @@ export type Payload = {
   types: RetrievePayload[];
 };
 
-type UseActionsResult = {
-  deploy: (selectedItems: Component[]) => Promise<void>;
-  retrieve: (selectedItems: Component[]) => Promise<void>;
-  isDeploying: boolean;
-  isRetrieving: boolean;
-  result: DeployResult | null;
-};
+// type UseActionsResult = {
+//   deploy: (selectedItems: Component[]) => Promise<void>;
+//   retrieve: (selectedItems: Component[]) => Promise<void>;
+//   isDeploying: boolean;
+//   isRetrieving: boolean;
+//   result: DeployResult | null;
+// };
 
 const buildPayload = (components: Component[]): RetrievePayload[] => {
   const grouped = new Map<string, string[]>();
@@ -69,87 +69,73 @@ const buildPayload = (components: Component[]): RetrievePayload[] => {
   }));
 };
 
-const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
-
-export const useActions = (): UseActionsResult => {
+export const useActions = () => {
   const [isDeploying, setIsDeploying] = useState(false);
   const [isRetrieving, setIsRetrieving] = useState(false);
   const [result, setResult] = useState<DeployResult | null>(null);
+
   const { sourceOrg, targetOrg } = useOrganizationMappingStore();
 
-  const deploy = useCallback(async (selectedItems: Component[]) => {
-    if (!selectedItems.length) {
-      alert("Please select at least one component to deploy.");
-      return;
-    }
+  const deploy = useCallback(
+    async (selectedItems: Component[]) => {
+      if (!selectedItems.length) {
+        alert("Please select at least one component to deploy.");
+        return;
+      }
 
-    const payload = buildPayload(selectedItems);
-    setIsDeploying(true);
-    setResult(null);
-    console.log("Started.", payload, targetOrg);
+      const payload = buildPayload(selectedItems);
 
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/api/metadata/deployements/execute`,
-        {
-          userId: targetOrg,
-          types: payload
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`
-          }
-        }
-      );
+      setIsDeploying(true);
+      setResult(null);
 
-      setResult(response.data);
-      console.log("Deployment successful:", response.data);
-    } catch (error: any) {
-      console.error("Deployment failed:", error);
-      setResult(error?.response?.data || error); // 👈 store error result
-      alert(
-        error?.response?.data?.message || "Deployment failed. Please try again."
-      );
-    } finally {
-      setIsDeploying(false);
-    }
-  }, []);
+      try {
+        const res = await deploymentsApi.deploy(targetOrg!, payload);
+        setResult(res);
+        console.log("Deployment successful:", res);
+      } catch (error: any) {
+        console.error("Deployment failed:", error);
+        setResult(error?.response?.data || null);
 
-  const retrieve = useCallback(async (selectedItems: Component[]) => {
-    if (!selectedItems.length) {
-      alert("Please select at least one component to retrieve.");
-      return;
-    }
+        alert(
+          error?.response?.data?.message ||
+            "Deployment failed. Please try again."
+        );
+      } finally {
+        setIsDeploying(false);
+      }
+    },
+    [targetOrg]
+  );
 
-    const payload = buildPayload(selectedItems);
-    setIsRetrieving(true);
-    setResult(null);
+  const retrieve = useCallback(
+    async (selectedItems: Component[]) => {
+      if (!selectedItems.length) {
+        alert("Please select at least one component to retrieve.");
+        return;
+      }
 
-    try {
-      const response = await axios.post(
-        `${BASE_URL}/api/metadata/deployments/retrieve`,
-        {
-          userId: sourceOrg,
-          types: payload
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`
-          }
-        }
-      );
-      console.log("Retrieve successful:", response.data);
-      setResult(response.data);
-    } catch (error: any) {
-      console.error("Retrieve failed:", error);
-      setResult(error?.response?.data || error);
-      alert(
-        error?.response?.data?.message || "Retrieve failed. Please try again."
-      );
-    } finally {
-      setIsRetrieving(false);
-    }
-  }, []);
+      const payload = buildPayload(selectedItems);
+
+      setIsRetrieving(true);
+      setResult(null);
+
+      try {
+        const res = await deploymentsApi.retrieve(sourceOrg!, payload);
+        setResult(res);
+        console.log("Retrieve successful:", res);
+      } catch (error: any) {
+        console.error("Retrieve failed:", error);
+        setResult(error?.response?.data || null);
+
+        alert(
+          error?.response?.data?.message || "Retrieve failed. Please try again."
+        );
+      } finally {
+        setIsRetrieving(false);
+      }
+    },
+    [sourceOrg]
+  );
 
   return {
     deploy,
