@@ -58,7 +58,6 @@ const AddOrganizationModal: React.FC = () => {
     setErrorMessage(null);
 
     try {
-      console.log(form);
       await create(form);
       closeAddModal();
       clearForm();

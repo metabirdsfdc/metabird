@@ -86,7 +86,6 @@ export const useOrganizations = create<OrganizationsState>((set, get) => ({
           : "Create failed");
 
       set({ loadError: message });
-      console.error("Create error:", message);
     } finally {
       set({ isLoadingOrganizations: false });
     }

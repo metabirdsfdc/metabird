@@ -72,11 +72,9 @@ const AuthSlideOver: React.FC<AuthSlideOverProps> = ({ open, onClose }) => {
         withCredentials: true
       });
 
-      console.log(data);
-
       login(data);
       onClose();
-      window.location.href = "/";
+      window.location.href = "/app";
     } catch (err: any) {
       setError(
         err?.response?.data?.message || "Authentication failed. Try again."

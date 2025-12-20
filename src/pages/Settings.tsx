@@ -25,8 +25,6 @@ const Settings: React.FC = () => {
   }, [fullName, email, authState.user]);
 
   const handleUpdate = () => {
-    console.log("Updating profile:", { fullName, email });
-
     const updatedUser = {
       ...authState.user!,
       fullName,
@@ -59,7 +57,7 @@ const Settings: React.FC = () => {
             <input
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="text-white w-full rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+              className="text-black w-full rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
             />
           </div>
 
@@ -70,7 +68,7 @@ const Settings: React.FC = () => {
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="text-white w-full rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
+              className="text-black w-full rounded-md border border-gray-300 dark:border-gray-700 bg-transparent px-3 py-2 text-sm"
             />
           </div>
 
