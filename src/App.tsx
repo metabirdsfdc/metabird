@@ -15,11 +15,11 @@ import Organizations from "./pages/Organizations";
 import Settings from "./pages/Settings";
 
 const App: React.FC = () => {
-  const { loading } = useContext(AuthContext);
+  const { loading, authState } = useContext(AuthContext);
   const getAll = useOrganizations((s) => s.getAll);
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && authState.accessToken) {
       getAll();
     }
   }, [loading, getAll]);

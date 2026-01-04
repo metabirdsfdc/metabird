@@ -2,137 +2,156 @@ import { Bird, Cloud, Layers, ShieldCheck } from "lucide-react";
 import React, { useState } from "react";
 import AuthSlideOver from "./modals/AuthSlideOver";
 
+const features = [
+  {
+    icon: Layers,
+    title: "Metadata Precision",
+    desc: "Select, retrieve, and deploy metadata with absolute control."
+  },
+  {
+    icon: Cloud,
+    title: "Multi-Org Access",
+    desc: "Securely connect and deploy across multiple Salesforce orgs."
+  },
+  {
+    icon: ShieldCheck,
+    title: "Deployment Safety",
+    desc: "Clear visibility into failures, successes, and rollbacks."
+  },
+  {
+    icon: Bird,
+    title: "Built for Teams",
+    desc: "Designed for admins and developers working together."
+  }
+];
+
 const MetabirdLanding: React.FC = () => {
   const [authOpen, setAuthOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-black">
-      <header className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
-        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Bird className="text-blue-600" size={22} />
-            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-              Metabird
-            </span>
-          </div>
+    <div className="min-h-screen bg-white dark:bg-[#0E1110] text-[#1F2937] dark:text-white transition-colors">
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-[#0E1110]/80 backdrop-blur border-b border-[#E5E7EB] dark:border-[#1F2A25]">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <span className="text-sm tracking-[0.3em] font-bold">METABIRD</span>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setAuthOpen(true)}
-              className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-700 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900"
-            >
-              Login / Sign Up
-            </button>
-          </div>
+          <button
+            onClick={() => setAuthOpen(true)}
+            className="
+              px-5 py-2 rounded-full
+              text-sm font-semibold
+              border border-[#2F6F59]
+              text-[#1F2937]
+              hover:bg-[#2F6F59] hover:text-white
+              dark:border-white dark:text-white
+              dark:hover:bg-white dark:hover:text-[#0E1110]
+              transition
+            "
+          >
+            Sign in
+          </button>
         </div>
       </header>
 
-      <main className="flex-1">
-        <section className="max-w-7xl mx-auto px-6 py-16">
-          <div className="max-w-3xl">
-            <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100">
-              Salesforce Metadata Deployments,
+      <main>
+        <section className="max-w-7xl mx-auto px-6 py-24 grid lg:grid-cols-2 gap-20 items-center">
+          <div className="space-y-10">
+            <span
+              className="
+                inline-flex w-fit
+                px-4 py-2 rounded-full
+                text-xs font-medium tracking-wide
+                border border-[#DADCE0]
+                text-[#6B7280]
+                dark:border-[#2A332E] dark:text-gray-400
+              "
+            >
+              Salesforce Deployment Platform
+            </span>
+
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight tracking-tight">
+              Metadata deployments
               <br />
-              Made Simple
+              without uncertainty
             </h1>
 
-            <p className="mt-4 text-gray-600 dark:text-gray-400">
-              Metabird helps teams retrieve, deploy, and track Salesforce
-              metadata with clarity, enabling Salesforce employees to manage
-              deployments efficiently and with confidence.
+            <p className="text-lg text-[#6B7280] dark:text-gray-400 max-w-xl leading-relaxed">
+              Metabird helps Salesforce teams deploy metadata with clarity,
+              predictability, and confidence across environments.
             </p>
 
-            <div className="mt-6 flex gap-3">
+            <div className="flex items-center gap-4">
               <button
                 onClick={() => setAuthOpen(true)}
-                className="px-5 py-2 text-sm rounded-md bg-blue-600 hover:bg-blue-700 text-white"
+                className="
+                  px-6 py-3 rounded-full
+                  bg-[#2F6F59] text-white
+                  text-sm font-semibold
+                  hover:opacity-90
+                  transition
+                "
               >
-                Get Started
+                Get started
               </button>
+
               <button
                 onClick={() => setAuthOpen(true)}
-                className="px-5 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900"
+                className="
+                  px-6 py-3 rounded-full
+                  border border-[#DADCE0]
+                  text-sm font-medium
+                  text-[#1F2937]
+                  hover:bg-[#F6F7F6]
+                  dark:border-[#2A332E] dark:text-white
+                  dark:hover:bg-[#151917]
+                  transition
+                "
               >
                 Login
               </button>
             </div>
           </div>
-        </section>
 
-        <section className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
-          <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: <Layers size={22} />,
-                title: "Metadata Control",
-                desc: "Deploy and retrieve metadata with precise component selection."
-              },
-              {
-                icon: <Cloud size={22} />,
-                title: "Org Connectivity",
-                desc: "Securely connect multiple Salesforce organizations."
-              },
-              {
-                icon: <ShieldCheck size={22} />,
-                title: "Safe Deployments",
-                desc: "Track failures, successes, and rollback behavior clearly."
-              },
-              {
-                icon: <Bird size={22} />,
-                title: "Developer First",
-                desc: "Designed for admins and developers who value clarity."
-              }
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                className="border border-gray-300 dark:border-gray-700 rounded-md p-4"
-              >
-                <div className="text-blue-600 dark:text-blue-400 mb-2">
-                  {item.icon}
+          <div className="grid sm:grid-cols-2 gap-6">
+            {features.map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={idx}
+                  className="
+                    p-8 rounded-3xl
+                    border border-[#E5E7EB]
+                    bg-[#F6F7F6]
+                    dark:bg-[#151917]
+                    dark:border-[#2A332E]
+                    transition
+                  "
+                >
+                  <div
+                    className="
+                      mb-6 h-10 w-10 rounded-full
+                      flex items-center justify-center
+                      bg-white
+                      dark:bg-[#0E1110]
+                    "
+                  >
+                    <Icon className="w-5 h-5 text-[#2F6F59]" />
+                  </div>
+
+                  <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+
+                  <p className="text-sm text-[#6B7280] dark:text-gray-400 leading-relaxed">
+                    {item.desc}
+                  </p>
                 </div>
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                  {item.title}
-                </h3>
-                <p className="text-xs mt-1 text-gray-600 dark:text-gray-400">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-sm text-gray-600 dark:text-gray-400 flex flex-col sm:flex-row items-center gap-2">
-            <span>
-              © {new Date().getFullYear()} Metabird. All rights reserved.
-            </span>
-            <span className="hidden sm:inline">•</span>
-            <span className="font-medium text-gray-800 dark:text-gray-200">
-              Developed by Suddala Pavan Kalyan
-            </span>
-            <a
-              href="https://www.linkedin.com/in/suddala-pavan-kalyan"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              LinkedIn
-            </a>
-          </div>
-
-          <div className="flex gap-6 text-sm text-gray-600 dark:text-gray-400">
-            <button className="hover:text-gray-800 dark:hover:text-gray-200">
-              Privacy
-            </button>
-            <button className="hover:text-gray-800 dark:hover:text-gray-200">
-              Terms
-            </button>
-            <button className="hover:text-gray-800 dark:hover:text-gray-200">
-              Support
-            </button>
-          </div>
+      <footer className="border-t border-[#E5E7EB] dark:border-[#1F2A25] py-8">
+        <div className="max-w-7xl mx-auto px-6 text-center text-xs text-[#6B7280] dark:text-gray-500">
+          © {new Date().getFullYear()} Metabird · Built by Suddala Pavan Kalyan
         </div>
       </footer>
 
